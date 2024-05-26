@@ -3,9 +3,9 @@ import srv from '../services/jugService.js'
 export default {
 
     createController : async(req, res)=>{
-        const {x, y, z}= req.body;
+        const {x_capacity, y_capacity, z_amount_wanted}= req.body;
         try {
-            const response = await srv.createJugCases(x, y, z)
+            const response = await srv.createJugCases(x_capacity, y_capacity, z_amount_wanted)
             res.status(201).json(response);
         } catch (error) {
             res.status(error.status).json({error: error.message})
