@@ -1,69 +1,125 @@
 # waterJugChallenge
-Api rest design for technical challenge
+Rest API design for a technical challenge
 
-Esta API resuelve el problema de medir exactamente Z galones utilizando dos jarras de X e Y galones. La API está construida con Express y utiliza Sequelize para interactuar con una base de datos PostgreSQL.
+[You can also read this document in Spanish](./data/spanish.md)
+
+This API solves the problem of measuring exactly Z gallons using two jugs of X and Y gallons. The API is built with Express.js and uses the following libraries: helmet, morgan, cors, node-cache, nodemon for development, and for testing jest and supertest.
 
 ## Endpoints
 
-### 1. Crear una solución
-- **Endpoint**: `/api/jugs/create`
-- **Método**: `POST`
-- **Descripción**: Crea una solución para medir exactamente Z galones con jarras de X e Y galones.
-- **Request**:
+### 1. Create a solution
+- **Endpoint:**: `/api/jugs/create`
+- **Method:**: `POST`
+- **Description:**: Creates a solution to measure exactly Z gallons with jugs of X and Y gallons.
+- **Request (json):**:
   ```json
   {
-    "x_capacity": 3,
-    "y_capacity": 5,
+    "x_capacity": 2,
+    "y_capacity": 10,
     "z_amount_wanted": 4
   }
+  ```
+- **Response (json):**
+```json
+{
+  "solution": [
+    {
+      "step": 1,
+      "action": "Fill bucket X",
+      "bucketX": 2,
+      "bucketY": 0
+    },
+    {
+      "step": 2,
+      "action": "Transfer from bucket X to Y",
+      "bucketX": 0,
+      "bucketY": 2
+    },
+    {
+      "step": 3,
+      "action": "Fill bucket X",
+      "bucketX": 2,
+      "bucketY": 2
+    },
+    {
+      "step": 4,
+      "action": "Transfer from bucket X to Y",
+      "bucketX": 0,
+      "bucketY": 4,
+      "status": "Solved"
+    }
+  ]
+}
+```
 
-## Configuracion y ejecucion:
-### Requerimientos:
-- Node.js version 18 o superior
-### Inicializar la applicacion:
-- Clonar el repositorio en alguna carpeta de su computadora.
-- En la terminal de bash o powershell situarse en el directorio raíz (donde se encuentra el archivo `package.json`): 
+## Configuration and Execution:
+### Requirements:
+- Node.js version 18 or higher
+### Initializing the application:
+- Clone the repository to a folder on your computer.
+- In the bash or powershell terminal, navigate to the root directory (where the `package.json` file is located): 
 ```bash
 > cd waterJugChallenge
 ```
-- Instalar las dependencias
+- Install dependencies
 ```bash
 > npm install
 ```
-Puede elegir entre declarar una variable de entorno o inicializar el servidor directamente, por defecto se iniciará en el puerto 3001.
-- Inicializar el servidor:
+You can choose between declaring an environment variable or initializing the server directly, by default it will start on port 3001.
+- Start the server:
 ```bash
 > npm start
 ```
-- Para ejecutar los tests el comando es: 
+- To run the tests the command is: 
 ```bash
 > npm test
 ```
-Puede correr test unitarios o un test integral
+### You can run unit tests or an integration test
 
-Test unitarios:
-los test unitarios son tres:
+#### Unit tests:
+There are three unit tests:
 
-01-validateJug
-02-checkFeasibility
-03-jugService
+- 01 : validateJug
+- 02 : checkFeasibility
+- 03 : jugService
 
-El test integral se ejecuta
+To run the unit tests the command is `npm test-xx`. For example: for test No. 1:
+```bash
+> npm test 01
+```
 
-## Explicación del Algoritmo
-El algoritmo para resolver el problema de las jarras de agua se basa en los siguientes pasos:
+The integration test (04) can be executed individually:
 
-Calcular el MCD (Máximo Común Divisor) de X e Y:
-El MCD de dos números es el mayor número que puede dividir a ambos sin dejar un residuo.
+```bash
+> npm test 04
+```
+All tests can be run simply with the command `npm test`
 
-Verificar que Z sea múltiplo del MCD de X e Y:
-Si Z no es múltiplo del MCD, es imposible medir Z galones con las jarras.
+## Explanation of the Algorithm
+The algorithm to solve the water jug problem is based on the following steps:
 
-Asegurarse de que Z sea menor o igual a la capacidad máxima de las jarras:
-Si Z es mayor que la capacidad de ambas jarras, es imposible medir Z galones.
+Calculate the GCD (Greatest Common Divisor) of X and Y:
+The GCD of two numbers is the largest number that can divide both without leaving a remainder.
 
-Simulación del proceso:
-Llenar y vaciar las jarras en una secuencia de pasos hasta que una de las jarras contenga exactamente Z galones.
+Check that Z is a multiple of the GCD of X and Y:
+If Z is not a multiple of the GCD, it is impossible to measure Z gallons with the jugs.
 
-El algoritmo utiliza un enfoque iterativo para llenar y transferir agua entre las jarras, registrando cada paso hasta alcanzar la cantidad deseada o determinar que no es posible.
+Ensure that Z is less than or equal to the maximum capacity of the jugs:
+If Z is greater than the capacity of both jugs, it is impossible to measure Z gallons.
 
+Simulation of the process:
+Fill and empty the jugs in a sequence of steps until one of the jugs contains exactly Z gallons.
+
+The algorithm uses an iterative approach to fill and transfer water between the jugs, recording each step until the desired amount is reached or determining that it is not possible.
+
+### Implemented in the application:
+
+Validation through middlewares:
+Validations are handled by two middlewares with their respective helper functions.
+- 1: Function `validateJug`:
+This function verifies that the inputs `x_capacity, y_capacity` and `z_amount_wanted` are present in the request body, it also validates that it is an integer and if an integer arrives as a string by mistake, it converts it for use.
+
+- 2: Function `checkFeasibility`:
+This function verifies that the operation can be carried out, the idea of ​​this implementation is that errors do not reach the controller, so if the operation is performed, it has the highest chance of success.
+
+Node-cache was also implemented for very common responses, it is configured to be kept for 10 minutes.

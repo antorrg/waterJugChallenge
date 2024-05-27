@@ -16,7 +16,7 @@ parsedInfo : (info)=>{;
 },
 
 
- gcd : (a, b) => {
+ gcd : (a, b) => { //This function implements Euclid's algorithm to find the GCD
   while (b !== 0) {
       const temp = b;
       b = a % b;

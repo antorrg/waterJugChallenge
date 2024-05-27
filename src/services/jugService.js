@@ -1,5 +1,5 @@
-const NodeCache =require('node-cache');
-const formatSolution =require('./helpers/jugServHelper.js');
+const NodeCache = require('node-cache');
+const formatSolution = require('./helpers/jugServHelper.js');
 
 const myCache = new NodeCache({ stdTTL: 600 }); // TTL of 10 minutes
 

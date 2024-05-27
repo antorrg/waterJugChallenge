@@ -27,9 +27,7 @@ const validateJug = (req, res, next) => {
 
   const zamount = help.parsedInfo(z_amount_wanted);
   if (!zamount) {
-    return res
-      .status(400)
-      .json({ error: "z_amount_wanted: Invalid parameter" });
+    return res.status(400).json({ error: "z_amount_wanted: Invalid parameter" });
   }
 
   // Update req.body with the validated values
