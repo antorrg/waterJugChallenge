@@ -1,8 +1,8 @@
-import express from 'express'
-import morgan from 'morgan'
-import helmet from 'helmet' 
-import cors from 'cors'
-import mainRouter from './routes/mainRouter.js'
+const express =require('express')
+const morgan =require('morgan')
+const helmet =require('helmet') 
+const cors =require('cors')
+const mainRouter =require('./routes/mainRouter.js')
 
 const app = express();
 
@@ -13,13 +13,16 @@ app.use(express.json())
 
 app.use(mainRouter)
 
+app.use((req, res, next) => {
+    res.status(404).json({ error: 'Not Found' });
+  });
 
 app.use((err, req, res, next)=>{
     const status = err.status || 500;
     const message = err.message || 'Server error';
-    console.error(err)
+    console.error(message)
     res.status(status).json(message)
 });
 
 
-export default app;
+module.exports = app

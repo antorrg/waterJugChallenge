@@ -1,11 +1,21 @@
+const NodeCache =require('node-cache');
+const formatSolution =require('./helpers/jugServHelper.js');
 
-const cases = [
-]
+const myCache = new NodeCache({ stdTTL: 600 }); // TTL of 10 minutes
 
 
-export default {
+
+module.exports = {
 
     createJugCases : (xCapacity, yCapacity, zAmountWanted) => {
+        try{
+        const cacheKey= `${xCapacity}-${yCapacity}-${zAmountWanted}`
+        const cachedSolutions = myCache.get(cacheKey)
+        if(cachedSolutions){
+            //console.log('Using the cache')
+            return cachedSolutions;
+        }
+
           let  stepsCount = 0;
             let solutionSteps = [];
             let x = 0;
@@ -28,17 +38,19 @@ export default {
         
                 if (x === zAmountWanted || y === zAmountWanted) {
                     solutionSteps.push({ status: "Solved" });
+                    //console.log('Using the function, steps: ',stepsCount)
                     stepsCount=0;
                     break;
                 }
             }
-            console.log(stepsCount)
-            cases.push(solutionSteps)
-            return solutionSteps;
+            if(!solutionSteps || solutionSteps.length === 0){const error = new Error('Unexpected error'); error.status = 500; throw error}
+            const solution = formatSolution(solutionSteps)
+            myCache.set(cacheKey, solution)
+            return solution;
+        }catch(error){
+            throw error;
+        }
     
     },
 
-    getAllSolutions : async () => {
-        return cases; 
-    }
 }
