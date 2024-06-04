@@ -123,3 +123,4 @@ This function verifies that the inputs `x_capacity, y_capacity` and `z_amount_wa
 This function verifies that the operation can be carried out, the idea of ​​this implementation is that errors do not reach the controller, so if the operation is performed, it has the highest chance of success.
 
 Node-cache was also implemented for very common responses, it is configured to be kept for 10 minutes.
+Note: If the response is `status 201` it means a new solution created, for the same post request within ten minutes of the first the response will be `status 200`, which means it is cached.

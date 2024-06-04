@@ -13,7 +13,10 @@ module.exports = {
         const cachedSolutions = myCache.get(cacheKey)
         if(cachedSolutions){
             //console.log('Using the cache')
-            return cachedSolutions;
+            return {
+                    solution: cachedSolutions,
+                    cache: true,
+                  };
         }
 
           let  stepsCount = 0;
@@ -46,7 +49,10 @@ module.exports = {
             if(!solutionSteps || solutionSteps.length === 0){const error = new Error('Unexpected error'); error.status = 500; throw error}
             const solution = formatSolution(solutionSteps)
             myCache.set(cacheKey, solution)
-            return solution;
+            return {
+                    solution,
+                    cache: false
+                    }
         }catch(error){
             throw error;
         }

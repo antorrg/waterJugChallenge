@@ -122,3 +122,5 @@ Esta función verifica que los inputs `x_capacity, y_capacity` y `z_amount_wante
 Esta función se encarga de verificar que la operación se pueda llevar a cabo, la idea de esta implementación es que los errores no lleguen al controller, de modo que si la operacion se realiza tenga la mayor posibilidad de éxito.
 
 Se implementó tambien node-cache para respuestas muy comunes, la misma está configurada en 10 minutos de conservación. 
+
+Nota: Si la response es `status 201` significa una nueva solución creada, para la misma peticion post en el lapso de diez minutos posteriores a la primera la response será `status 200`, lo que significa que está guardada en caché.
